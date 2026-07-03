@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Resume Matcher">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
+
+    <title>Dashboard | Resume Matcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <span style="font-size:1.5rem;">🚀</span>
+            <h1>Resume<span>Match</span></h1>
+        </div>
+        <div class="user-menu">
+            <div class="user-pill">
+                ● {{ user_email }}
+            </div>
+            <a href="/logout" class="logout-link">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Main Action Card (Left/Center) -->
+        <main class="main-card">
+            <div class="hero-text">
+                <h2>Job Role Evaluator</h2>
+                <p class="motto-text">"Don't let the ATS decide your fate. Scan, Optimize, & Win."</p>
+            </div>
+
+            <!-- Mode Switcher -->
+            <div class="mode-switch">
+                <button class="mode-btn active" onclick="switchMode('standard')">Standard Match</button>
+                <button class="mode-btn" onclick="switchMode('agent')">AI JD Analyzer</button>
+            </div>
+
+            <!-- Standard Form -->
+            <div id="standard-form">
+                <div class="form-group">
+                    <label>Target Role</label>
+                    <select id="jobRole">
+                        <option>Loading...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Resume Content</label>
+                    <textarea id="resumeText" placeholder="Paste your resume content here..."></textarea>
+                </div>
+
+                <div class="file-upload-wrapper">
+                    <label for="resumeFile" style="cursor:pointer;">
+                        <span style="display:block; font-size:1.5rem; margin-bottom:0.5rem;">📂</span>
+                        <span>Click to Upload PDF Resume</span>
+                    </label>
+                    <input type="file" id="resumeFile" accept=".pdf" class="hidden"
+                        onchange="document.querySelector('.file-upload-wrapper span:last-child').textContent = this.files[0].name">
+                </div>
+
+                <button id="evaluateBtn" class="primary-btn">Analyze Resume</button>
+            </div>
+
+            <!-- Agent Form -->
+            <div id="agent-form" class="hidden">
+                <div class="form-group">
+                    <label>Job Description (Target Company)</label>
+                    <textarea id="jdText" placeholder="Paste the job description here..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Resume</label>
+                    <textarea id="agentResumeText" placeholder="Paste your resume content here..."></textarea>
+                </div>
+
+                <div class="file-upload-wrapper">
+                    <label for="agentResumeFile" style="cursor:pointer;">
+                        <span style="display:block; font-size:1.5rem; margin-bottom:0.5rem;">📂</span>
+                        <span>Click to Upload PDF Resume</span>
+                    </label>
+                    <input type="file" id="agentResumeFile" accept=".pdf" class="hidden"
+                        onchange="document.querySelector('#agent-form .file-upload-wrapper span:last-child').textContent = this.files[0].name">
+                </div>
+
+                <button id="agentAnalyzeBtn" class="primary-btn">Run AI Analysis</button>
+            </div>
+        </main>
+
+        <!-- Side Panel (Results & History) -->
+        <aside class="side-panel">
+
+            <!-- Result Card -->
+            <div id="resultCard" class="info-card hidden">
+                <h3 style="margin-bottom:1rem;">Match Result</h3>
+                <div class="score-display">
+                    <div class="big-score" id="matchScoreDisplay">0%</div>
+                    <span class="score-label">Match Score</span>
+                </div>
+
+                <div id="suggestionBox" style="margin-top:1.5rem; line-height:1.5; font-size:0.9rem; color: #cbd5e1;">
+                </div>
+
+                <div style="margin-top:1.5rem;">
+                    <strong style="display:block; margin-bottom:0.5rem; font-size:0.85rem;">Keywords Found</strong>
+                    <div id="matchedKeywords"></div>
+                </div>
+                <div style="margin-top:1rem;">
+                    <strong style="display:block; margin-bottom:0.5rem; font-size:0.85rem;">Missing (Critical)</strong>
+                    <div id="missingKeywords"></div>
+                </div>
+            </div>
+
+            <!-- Agent Result Card -->
+            <div id="agentResultCard" class="info-card hidden">
+                <h3 style="margin-bottom:1rem;">Agent Insights</h3>
+                <p id="agentInsight" style="font-weight:700; margin-bottom:0.5rem;"></p>
+                <p id="agentLagging" style="color:var(--text-low); font-size:0.9rem; margin-bottom:1rem;"></p>
+
+                <div style="margin-top:1rem;">
+                    <strong style="display:block; margin-bottom:0.5rem; font-size:0.85rem;">Skills You Have</strong>
+                    <div id="agentMatched"></div>
+                </div>
+                <div style="margin-top:1rem;">
+                    <strong style="display:block; margin-bottom:0.5rem; font-size:0.85rem;">Skills To Learn</strong>
+                    <div id="agentMissing"></div>
+                </div>
+            </div>
+
+            <!-- History Card -->
+            <div class="info-card">
+                <h3 style="margin-bottom:1rem; font-size:1.1rem;">Recent Scans</h3>
+                <div id="historyList" class="history-list">
+                    <div class="history-item skeleton-box skeleton" style="border:none;"></div>
+                    <div class="history-item skeleton-box skeleton" style="border:none;"></div>
+                    <div class="history-item skeleton-box skeleton" style="border:none;"></div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>Developed by <span>SCK</span> &copy; 2026</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+</body>
+
+</html>

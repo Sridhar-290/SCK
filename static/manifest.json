@@ -1,0 +1,18 @@
+{
+  "name": "Resume Matcher",
+  "short_name": "ResumeMatcher",
+  "description": "AI-powered Resume Matching Tool",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A90E2",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

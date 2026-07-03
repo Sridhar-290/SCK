@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Resume Matcher">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon.png') }}">
+
+    <title>Login | Resume Matcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .toggle-btn:hover {
+            color: var(--secondary);
+            transform: translateY(-1px);
+        }
+
+        .auth-footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .form-info {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            color: var(--accent);
+            border-left: 3px solid var(--primary);
+        }
+
+        .project-showcase {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            text-align: left;
+        }
+
+        .showcase-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .s-icon {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.6rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+        }
+
+        .showcase-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            color: var(--text-main);
+        }
+
+        .showcase-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-card glass text-center">
+            <header style="text-align: center;">
+                <div class="logo-large">
+                    <span>🚀</span>
+                    <h1>Resume<span>Match</span></h1>
+                </div>
+                <p class="subtitle" id="authSubtitle">Login to access your dashboard</p>
+            </header>
+
+            <div class="form-info" id="formDesc">
+                Welcome back! Enter your email to quickly access your evaluation history.
+            </div>
+
+            <form id="authForm">
+                <div class="form-group" id="nameGroup" style="display: none;">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="Your Name" class="glass-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="name@example.com" class="glass-input">
+                </div>
+
+                <button type="submit" class="primary-btn" id="submitBtn">
+                    <span>Login</span>
+                </button>
+            </form>
+
+            <p id="errorMsg"
+                style="color: #ef4444; margin-top: 1.5rem; font-size: 0.9rem; font-weight: 600; display: none;"></p>
+
+            <div class="auth-footer">
+                <button id="toggleMode" class="toggle-btn">New user? Create an account</button>
+            </div>
+
+            <!-- Public Project Showcase (Visible to everyone) -->
+            <div class="project-showcase">
+                <div class="showcase-item">
+                    <span class="s-icon">🎯</span>
+                    <div>
+                        <h4>ATS Optimization</h4>
+                        <p>Analyze how well your resume survives automated filters.</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <span class="s-icon">🤖</span>
+                    <div>
+                        <h4>AI Agent Analysis</h4>
+                        <p>Paste any Job Description and get real-time skill gap insights.</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <span class="s-icon">📈</span>
+                    <div>
+                        <h4>Historical Tracking</h4>
+                        <p>Save every scan and monitor your improvement over time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('authForm');
+        const toggleBtn = document.getElementById('toggleMode');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const title = document.getElementById('authSubtitle');
+        const formDesc = document.getElementById('formDesc');
+        const nameGroup = document.getElementById('nameGroup');
+        const fullNameInput = document.getElementById('fullName');
+
+        let isRegister = false;
+
+        toggleBtn.addEventListener('click', () => {
+            isRegister = !isRegister;
+            title.textContent = isRegister ? 'Create a new account' : 'Login to access your dashboard';
+            submitBtn.querySelector('span').textContent = isRegister ? 'Register Now' : 'Login';
+            toggleBtn.textContent = isRegister ? 'Already have an account? Login here' : 'New user? Create an account';
+
+            formDesc.textContent = isRegister ?
+                'Join us to get detailed AI-powered insights for all your job applications.' :
+                'Welcome back! Enter your email to quickly access your evaluation history.';
+
+            nameGroup.style.display = isRegister ? 'block' : 'none';
+            fullNameInput.required = isRegister;
+
+            errorMsg.style.display = 'none';
+
+            // Focus on name if registering
+            if (isRegister) setTimeout(() => fullNameInput.focus(), 100);
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const full_name = isRegister ? fullNameInput.value : null;
+
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.querySelector('span').textContent = isRegister ? 'Registering...' : 'Authenticating...';
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        full_name,
+                        action: isRegister ? 'register' : 'login'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.href = data.redirect;
+                } else {
+                    errorMsg.textContent = data.error;
+                    errorMsg.style.display = 'block';
+                    // Revert button text
+                    submitBtn.querySelector('span').textContent = isRegister ? 'Register Now' : 'Login';
+                }
+            } catch (err) {
+                errorMsg.textContent = 'Connection error. Please check your internet and try again.';
+                errorMsg.style.display = 'block';
+                submitBtn.querySelector('span').textContent = isRegister ? 'Register Now' : 'Login';
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+    </script>
+    <footer>
+        <p>Developed by <span>SCK</span> &copy; 2026</p>
+    </footer>
+</body>
+
+</html>
