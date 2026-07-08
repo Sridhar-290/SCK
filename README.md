@@ -71,6 +71,7 @@ The UI follows a **"Modern Dark SaaS"** aesthetic:
 2.  (Optional) Create Admin: `python create_admin.py <email> <name>`
 3.  Run Server: `python app.py`
 4.  Access: `http://127.0.0.1:5000`
+https://chatgpt.com/backend-api/estuary/content?id=file_000000001e7871f6b46c4fd7b29ac01a&ts=495423&p=fs&cid=1&sig=80c294e747167468d70c4ffe73b868de68f9fdadca3a3ce7004af5d71852b789&v=0
 
 ---
 **Developed by SCK © 2026**
