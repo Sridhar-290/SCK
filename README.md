@@ -72,6 +72,7 @@ The UI follows a **"Modern Dark SaaS"** aesthetic:
 3.  Run Server: `python app.py`
 4.  Access: `http://127.0.0.1:5000`
 
-https://chatgpt.com/backend-api/estuary/content?id=file_000000001e7871f6b46c4fd7b29ac01a&ts=495423&p=fs&cid=1&sig=80c294e747167468d70c4ffe73b868de68f9fdadca3a3ce7004af5d71852b789&v=0
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/6695eb88-c939-4379-8e52-eec7c7e00073" />
+
 ---
 **Developed by SCK © 2026**
